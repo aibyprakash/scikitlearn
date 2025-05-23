@@ -1,0 +1,6 @@
+# Stocks and symbols to track (one per line or space/tab/comma separated)
+AAPL MSFT GOOG AMZN META
+NVDA TSLA
+CRUDE_OIL NATURAL_GAS
+CL, NG  # Commodities
+NSE, CME  # Exchanges
