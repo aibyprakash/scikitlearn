@@ -17,6 +17,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
+import random
 
 
 
@@ -55,9 +56,19 @@ class ReviewContianer:
     def __init__(self,reviews):
         self.reviews = reviews
 
+    def get_text(self):
+        return [x.text for x in self.reviews]
+    
+    def get_sentiment(self):
+        return [x.sentiment for x in self.reviews]
+
     def evenly_distribute(self):
-        negative = filter(lambda x: x.setiment ==Sentiment.NEGATIVE,self.reviews)
-        positive = filter(lambda x: x.setiment ==Sentiment.POSITIVE,self.reviews)
+        negative = list(filter(lambda x: x.sentiment ==Sentiment.NEGATIVE,self.reviews))
+        positive = list(filter(lambda x: x.sentiment ==Sentiment.POSITIVE,self.reviews))
+        positive_shrunk = positive[:len(negative)]
+
+        self.reviews = negative +positive_shrunk
+        random.shuffle(self.reviews)
 
 
 #import json
@@ -94,16 +105,42 @@ THIS BOOK WAS SO BAD
 #Prepare data
 #print(len(reviews))
 training,test = train_test_split(reviews,test_size=0.33,random_state=42)
+
+#ReviewContainer
+
+train_conainer = ReviewContianer(training)
+test_container = ReviewContianer(test)
+
+#cont.evenly_distribute()
+#print("#######>>>>>>>>>",len(cont.reviews))
+
 #Identify the length of training and test data
 #print(len(training),len(test))
 
 #print(training[0].text,training[0].sentiment)
 #lamda expression 
+
+''' OLD
 train_x = [x.text for x in training]
 train_y = [x.sentiment for x in training]
 
 test_x = [x.text for x in test]
 test_y = [x.sentiment for x in test]
+
+'''
+#evenly_distribute make the same number of tarin and test data sets
+
+train_conainer.evenly_distribute()
+
+train_x =train_conainer.get_text()
+train_y = train_conainer.get_sentiment()
+
+test_container.evenly_distribute()
+test_x = test_container.get_text()
+test_y = test_container.get_sentiment()
+
+print(">>>>>>>>>|||",train_y.count(Sentiment.POSITIVE))
+print(">>>>>>>>>|||",train_y.count(Sentiment.NEGATIVE))
 
 #print(train_x[0])
 #print(train_y[0])
@@ -196,3 +233,13 @@ print("F1 Score Logistic Regression",f1_score(test_y,clf_log.predict(test_x_vect
 print(train_y[0:5])
 print(train_y.count(Sentiment.NEGATIVE))
 print(train_y.count(Sentiment.POSITIVE))
+
+
+print(">>>>>>>>>>>> PREDICTION <<<<<<<<<<<<<<<<<<<<<<")
+test_set = ['very good book','bad book do not buy','horrible waste of time']
+new_test = vectorizer.transform(test_set)
+print(clf_svm.predict(new_test))
+
+print(">>>>>>>>>>>> END OF PREDICTION <<<<<<<<<<<<<<<<<<<<<<")
+
+
