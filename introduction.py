@@ -236,7 +236,9 @@ print(train_y.count(Sentiment.POSITIVE))
 
 
 print(">>>>>>>>>>>> PREDICTION <<<<<<<<<<<<<<<<<<<<<<")
-test_set = ['very good book','bad book do not buy','horrible waste of time']
+test_set = [' Disappointed advertised as adults, older children more like sorry',
+            'Pages trop fines, impressions qui dégorgent',
+            'Great for beginner colourers as images are less complicated with lots of big spaces. Would also be good for zentangling']
 new_test = vectorizer.transform(test_set)
 print(clf_svm.predict(new_test))
 
